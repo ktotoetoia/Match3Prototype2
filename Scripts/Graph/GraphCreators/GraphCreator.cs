@@ -24,6 +24,7 @@ public class GraphCreator : IGraphCreator
     public IPieceContainer[,] CreateContainers()
     {
         ContainerInfo[,] grid = graphInfo.ContainersGrid;
+        
         int length0 = grid.GetLength(0);
         int length1 = grid.GetLength(1);
 

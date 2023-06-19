@@ -49,10 +49,17 @@ public class IncidentContainersInfo : IIncidentContainersInfo
         Vector2Int thisContainerPosition = container.ContainerInfo.GraphPosition;
         Vector2Int containerToAddPosition = containerToAdd.ContainerInfo.GraphPosition;
 
-        if (thisContainerPosition.y > containerToAddPosition.y) Down = containerToAdd;
-        if (thisContainerPosition.y < containerToAddPosition.y) Up = containerToAdd;
-        if (thisContainerPosition.x > containerToAddPosition.x) Left = containerToAdd;
-        if (thisContainerPosition.x < containerToAddPosition.x) Right = containerToAdd;
+        if (thisContainerPosition.y > containerToAddPosition.y)
+             Down = containerToAdd;
+
+        if (thisContainerPosition.y < containerToAddPosition.y)
+            Up = containerToAdd;
+
+        if (thisContainerPosition.x > containerToAddPosition.x)
+            Left = containerToAdd;
+        
+        if (thisContainerPosition.x < containerToAddPosition.x)
+            Right = containerToAdd;
     }
 
     public bool IsIncident(IPieceContainer container)
@@ -89,16 +96,6 @@ public class IncidentContainersInfo : IIncidentContainersInfo
     }
 
     public void AddIncidentContainer(IPieceContainer container)
-    {
-        if (container is NullContainer)
-        {
-            return;
-        }
-
-        AddContainerToActions(container);
-    }
-
-    private void AddContainerToActions(IPieceContainer container)
     {
         AddContainer(container);
 

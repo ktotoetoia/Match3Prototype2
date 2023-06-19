@@ -9,16 +9,24 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
 
     public void CheckMatch(IPieceContainer from, IPieceContainer to)
     {
-        List<IPieceContainer> fromContainers = GetMatchedContainers(from);
-        List<IPieceContainer> toContainers = GetMatchedContainers(to);
+        IMatchInfo fromInfo = GetMatchInfo(from);
+        IMatchInfo toInfo = GetMatchInfo(to);
 
-        fromContainers.Remove(to);
-        toContainers.Remove(from);
+        fromInfo.RemoveContainer(to);
+        toInfo.RemoveContainer(from);
+
+        StartCoroutines(fromInfo, toInfo);
+    }
+
+    private void StartCoroutines(IMatchInfo fromInfo, IMatchInfo toInfo)
+    {
+        List<IPieceContainer> fromContainers = fromInfo.GetContainersToMatch();
+        List<IPieceContainer> toContainers = toInfo.GetContainersToMatch();
 
         List<IEnumerator> coroutines = new List<IEnumerator>
-        { 
-            CheckMatchesWhenPieceArrives(from,fromContainers),
-            CheckMatchesWhenPieceArrives(to, toContainers),
+        {
+            CheckMatchesWhenPieceArrives(fromInfo),
+            CheckMatchesWhenPieceArrives(toInfo),
             UpdateAfterMatch(fromContainers.Concat(toContainers)),
         };
 
@@ -38,13 +46,13 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
         }
     }
 
-    private IEnumerator CheckMatchesWhenPieceArrives(IPieceContainer container, List<IPieceContainer> containers)
+    private IEnumerator CheckMatchesWhenPieceArrives(IMatchInfo matchInfo)
     {
-        IPiece piece = container.Piece;
+        IPiece piece = matchInfo.MovedContainer.Piece;
 
         yield return new WaitUntil(() => piece.Arrived);
         
-        MatchPieces(containers);
+        MatchPieces(matchInfo.GetContainersToMatch());
     }
 
     private IEnumerator UpdateAfterMatch(IEnumerable<IPieceContainer> containers)
@@ -53,24 +61,15 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
         yield return null;
     }
 
-    private List<IPieceContainer> GetMatchedContainers(IPieceContainer container)
+    private IMatchInfo GetMatchInfo(IPieceContainer container)
     {
-        List<IPieceContainer> verticalContainers = VerticalMatchs(container);
-        List<IPieceContainer> horizontalContainers = HorizontalMatchs(container);
+        List<IPieceContainer> verticalContainers = new List<IPieceContainer>();
+        List<IPieceContainer> horizontalContainers = new List<IPieceContainer>();
 
-        List<IPieceContainer> result = new List<IPieceContainer>();
+        VerticalMatchs(container,verticalContainers);
+        HorizontalMatchs(container, horizontalContainers);
 
-        if(horizontalContainers.Count > 2)
-        {
-            result.AddRange(horizontalContainers);
-        }
-
-        if (verticalContainers.Count > 2)
-        {
-            result.AddRange(verticalContainers);
-        }
-
-        return result;
+        return new MatchInfo(container, verticalContainers, horizontalContainers);
     }
 
     private void MatchPieces(IEnumerable<IPieceContainer> containers)
@@ -89,30 +88,18 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
         }
     }
 
-    private List<IPieceContainer> VerticalMatchs(IPieceContainer container)
+    private void VerticalMatchs(IPieceContainer container, List<IPieceContainer> containers)
     {
-        List<IPieceContainer> containers = new List<IPieceContainer>
-        {
-            container
-        };
-        
+        containers.Add(container);
         UpMatchs(container, containers);
         DownMatchs(container, containers);
-
-        return containers;
     }
 
-    private List<IPieceContainer> HorizontalMatchs(IPieceContainer container)
+    private void HorizontalMatchs(IPieceContainer container,List<IPieceContainer> containers)
     {
-        List<IPieceContainer> containers = new List<IPieceContainer>
-        {
-            container
-        };
-
+        containers.Add(container);
         LeftMatchs(container, containers);
         RightMatchs(container, containers);
-
-        return containers;
     }
 
     private void UpMatchs(IPieceContainer container, List<IPieceContainer> containers)

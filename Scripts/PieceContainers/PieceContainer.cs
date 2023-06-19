@@ -3,19 +3,14 @@
 public class PieceContainer : IPieceContainer
 {
     public IPiece Piece { get; private set; }
-
     public bool IsEmpty { get { return Piece == null; } }
     public Vector2 Position { get { return ContainerInfo.WorldPosition; } }
     public ContainerInfo ContainerInfo { get; private set; }
-    public IIncidentContainersInfo IncidentContainerInfo { get; private set; }
+    public IIncidentContainersInfo IncidentContainerInfo { get; set; }
 
     public PieceContainer(ContainerInfo containerInfo)
     {
         ContainerInfo = containerInfo;
-
-        IncidentContainerInfo = new IncidentContainersInfo(this);
-        IncidentContainerInfo.AddAction(new PieceDownMover(this));
-        IncidentContainerInfo.AddLateAction(new PieceSlopeMover(this));
     }
 
     public bool TryConnect(IPiece piece)
@@ -32,7 +27,7 @@ public class PieceContainer : IPieceContainer
     private void Connect(IPiece piece)
     {
         SetPiece(piece);
-        SelfUpdate();
+        Update();
     }
 
     private void SetPiece(IPiece piece)
@@ -53,7 +48,7 @@ public class PieceContainer : IPieceContainer
         if (container.IsEmpty)
         {
             container.TryConnect(Disconnect());
-            SelfUpdate();
+            Update();
             return true;
         }
         
@@ -77,12 +72,11 @@ public class PieceContainer : IPieceContainer
 
     public void Update()
     {
-        SelfUpdate();
-    }
+        if (!IsEmpty)
+        {
+            IncidentContainerInfo.UpdateActions();
+        }
 
-    private void SelfUpdate()
-    {
-        IncidentContainerInfo.UpdateActions();
         IncidentContainerInfo.Update();
     }
 }

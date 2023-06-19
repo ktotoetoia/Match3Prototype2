@@ -1,6 +1,7 @@
 using Zenject;
 
 
+
 public class GraphInstaller : MonoInstaller
 {
     [Inject] private LevelSettings levelSettings;

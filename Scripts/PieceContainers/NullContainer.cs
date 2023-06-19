@@ -3,24 +3,19 @@
 public class NullContainer : IPieceContainer
 {
     public IPiece Piece { get; }
-
     public Vector2 Position { get { return Vector2.positiveInfinity; } }
     public bool IsEmpty { get; }
-
     public ContainerInfo ContainerInfo { get; private set; }
-    public IIncidentContainersInfo IncidentContainerInfo { get; } 
-    
+    public IIncidentContainersInfo IncidentContainerInfo { get; set; }
+
     public NullContainer()
     {
         IncidentContainerInfo = new IncidentContainersInfo(this);
     }
+    
     public IPiece Disconnect()
     {
         return null;
-    }
-    public void AddIncidentContainer(IPieceContainer container)
-    {
-
     }
 
     public bool TryConnect(IPiece piece)
@@ -41,11 +36,6 @@ public class NullContainer : IPieceContainer
     public IPiece ChangePiece(IPiece piece)
     {
         return null;
-    }
-
-    public void LateUpdate()
-    {
-
     }
 
     public void OnMatch()
