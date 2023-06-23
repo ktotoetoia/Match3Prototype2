@@ -98,5 +98,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Color>k__BackingField: 4
-  speed: 0.01
+  speed: 0.1
   stopDistance: 0.01

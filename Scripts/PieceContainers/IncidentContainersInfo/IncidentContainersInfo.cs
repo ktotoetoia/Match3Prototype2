@@ -68,7 +68,7 @@ public class IncidentContainersInfo : IIncidentContainersInfo
     }
 
     public void Update()
-    {   
+    {
         foreach (IPieceContainer container in IncidentContainers)
         {
             container.IncidentContainerInfo.UpdateActions();

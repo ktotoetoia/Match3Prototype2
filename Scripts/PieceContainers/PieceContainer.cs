@@ -7,6 +7,7 @@ public class PieceContainer : IPieceContainer
     public Vector2 Position { get { return ContainerInfo.WorldPosition; } }
     public ContainerInfo ContainerInfo { get; private set; }
     public IIncidentContainersInfo IncidentContainerInfo { get; set; }
+    
     public PieceContainer(ContainerInfo containerInfo)
     {
         ContainerInfo = containerInfo;
@@ -82,6 +83,6 @@ public class PieceContainer : IPieceContainer
     public void TransformToPiece(IMatchInfo matchInfo, IPiece piece)
     {
         Piece?.OnMatch(matchInfo,this);
-        Connect(piece);
+        SetPiece(piece);
     }
 }
