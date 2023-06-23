@@ -93,7 +93,7 @@ public class MatchGetter : IMatchGetter
     {
         IPieceContainer nextContainer = getNextContainer(container);
 
-        if (container != null && (anyColor || nextContainer?.Piece?.Color == container?.Piece?.Color))
+        if (nextContainer != null && (anyColor || nextContainer?.Piece?.Color == container?.Piece?.Color))
         {
             containers.Add(nextContainer);
             GetContainers(nextContainer, containers, getNextContainer,anyColor);

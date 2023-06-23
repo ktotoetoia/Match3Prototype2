@@ -65,7 +65,7 @@ public class PieceContainer : IPieceContainer
 
     public void OnMatch(IMatchInfo matchInfo)
     {
-        Piece?.OnMatch(matchInfo);
+        Piece?.OnMatch(matchInfo,this);
         Disconnect();
     }
 
@@ -81,7 +81,7 @@ public class PieceContainer : IPieceContainer
 
     public void TransformToPiece(IMatchInfo matchInfo, IPiece piece)
     {
-        Piece?.OnMatch(matchInfo);
+        Piece?.OnMatch(matchInfo,this);
         Connect(piece);
     }
 }

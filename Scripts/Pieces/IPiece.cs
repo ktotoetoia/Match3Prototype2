@@ -7,7 +7,7 @@ public interface IPiece
     public PieceType Type { get; }
     public void AddPosition(Vector2 position);
     public void SetPosition(Vector2 position);
-    public void OnMatch(IMatchInfo matchInfo);
+    public void OnMatch(IMatchInfo matchInfo,IPieceContainer container);
 }
 
 public enum PieceColor

@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
-
-public class HorizontalPiece : Piece
+﻿public class HorizontalPiece : Piece
 {
-    private bool isMatched = false;
+    public override PieceType Type => PieceType.Horizontal;
 
-    public override void OnMatch(IMatchInfo matchInfo)
+
+    public override void OnMatch(IMatchInfo matchInfo,IPieceContainer container)
     {
-        if (isMatched) return;
-        isMatched = true;
-
-        IPieceContainer container = matchInfo.GetContainer(this);
         matchInfo.MatchChecker.CheckHorizontalMatch(container);
 
-        base.OnMatch(matchInfo);
+        base.OnMatch(matchInfo, container);
     }
 }

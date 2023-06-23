@@ -1,15 +1,12 @@
 ﻿public class VerticalPiece : Piece
 {
-    private bool isMatched = false;
+    public override PieceType Type => PieceType.Vertical;
 
-    public override void OnMatch(IMatchInfo matchInfo)
+
+    public override void OnMatch(IMatchInfo matchInfo,IPieceContainer container)
     {
-        if (isMatched) return;
-        isMatched = true;
-
-        IPieceContainer container = matchInfo.GetContainer(this);
         matchInfo.MatchChecker.CheckVerticalMatch(container);
         
-        base.OnMatch(matchInfo);
+        base.OnMatch(matchInfo, container);
     }
 }

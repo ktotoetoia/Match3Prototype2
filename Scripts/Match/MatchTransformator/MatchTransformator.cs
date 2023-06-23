@@ -7,17 +7,26 @@ public class MatchTransformator : IMatchTransformator
 
     public IPiece Transform(IMatchInfo matchInfo)
     {
-        if (matchInfo.MovedContainer.Piece == null || matchInfo.MatchedContainers.Any(x => x.Piece.Type != PieceType.Common)) return null;
+        IPiece movedPiece = matchInfo.MovedContainer.Piece;
 
-        IPiece piece = null;
-        PieceColor pieceColor = matchInfo.MovedContainer.Piece.Color;
+        if (movedPiece == null || 
+            matchInfo.MatchedContainers
+            .Where(x=> x!= null)
+            .Any(x => x.Piece?.Type != PieceType.Common))
+        {
+            return null;
+        }
+
         PieceType pieceType = GetPieceType(matchInfo);
 
-        if(pieceType != PieceType.Common)
+        if (pieceType == PieceType.Common)
         {
-            piece = pieceInstantiator.Instantiate(pieceColor, pieceType);
-            piece.SetPosition(matchInfo.MovedContainer.Position);
+            return null;
         }
+
+        PieceColor pieceColor = movedPiece.Color;
+        IPiece piece = pieceInstantiator.Instantiate(pieceColor, pieceType);
+        piece.SetPosition(matchInfo.MovedContainer.Position);
 
         return piece;
     }

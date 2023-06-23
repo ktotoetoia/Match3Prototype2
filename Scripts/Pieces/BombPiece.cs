@@ -1,18 +1,11 @@
-﻿using System.Collections.Generic;
-
-public class BombPiece : Piece
+﻿public class BombPiece : Piece
 {
-    private bool isMatched = false;
+    public override PieceType Type => PieceType.Bomb;
 
-    public override void OnMatch(IMatchInfo matchInfo)
+    public override void OnMatch(IMatchInfo matchInfo,IPieceContainer container)
     {
-        if(isMatched) return;
-
-        isMatched = true;
-
-        IPieceContainer container = matchInfo.GetContainer(this);
         matchInfo.MatchChecker.CheckSquareMatch(container);
         
-        base.OnMatch(matchInfo);
+        base.OnMatch(matchInfo,container);
     }
 }

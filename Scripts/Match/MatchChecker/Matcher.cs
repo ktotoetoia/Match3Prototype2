@@ -1,6 +1,5 @@
 ﻿using Zenject;
 using System.Linq;
-using UnityEngine;
 
 public class Matcher : IMatcher
 {
@@ -16,15 +15,15 @@ public class Matcher : IMatcher
     {
         IPiece piece = matchTransformator.Transform(matchInfo);
 
-        if(piece != null)
+        if (piece != null && !matchInfo.MatchedContainers.Any(x => x.Piece.Type != PieceType.Common))
         {
             matchInfo.MovedContainer.TransformToPiece(matchInfo, piece);
             matchInfo.RemoveContainer(matchInfo.MovedContainer);
         }
 
-        foreach(IPieceContainer container in matchInfo.MatchedContainers)
+        foreach (IPieceContainer container in matchInfo.MatchedContainers)
         {
-            container?.OnMatch(matchInfo);
+            container.OnMatch(matchInfo);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -8,9 +7,8 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
 {
     public IMatchInfoFactory MatchInfoFactory { get; private set; }
 
-    [Inject] public IMatchGetter MatchGetter { get; private set; }
-    
-    [Inject] public IMatcher Matcher { get; private set; }
+    [Inject] private IMatchGetter matchGetter;
+    [Inject] private IMatcher matcher;
 
     private void Awake()
     {
@@ -25,32 +23,26 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
         fromInfo.RemoveContainer(to);
         toInfo.RemoveContainer(from);
 
-        StartCoroutines(fromInfo, toInfo);
+        StartMatchCoroutines(fromInfo, toInfo);
     }
 
-    public void CheckMatches(IMatchInfo matchInfo)
+    private void StartMatchCoroutines(params IMatchInfo[] matchInfos)
     {
-        Matcher.MatchContainers(matchInfo);
-        UpdateContainers(matchInfo.MatchedContainers);
-    }
-
-    private void StartCoroutines(params IMatchInfo[] matchInfos)
-    {
-        List<IEnumerator> coroutines = new List<IEnumerator>();
         List<IPieceContainer> containersToUpdate = new List<IPieceContainer>();
+        List<IEnumerator> coroutines = new List<IEnumerator>();
 
-        for (int i = 0; i< matchInfos.Length; i++)
+        for (int i = 0; i < matchInfos.Length; i++)
         {
             coroutines.Add(CheckMatchesWhenPieceArrives(matchInfos[i]));
             containersToUpdate.AddRange(matchInfos[i].MatchedContainers);
         }
 
-        coroutines.Add(UpdateAfterMatch(containersToUpdate));
+        coroutines.Add(UpdateInNextFrame(containersToUpdate));
         
         StartCoroutinesInOrder(coroutines);
     }
 
-    public void StartCoroutinesInOrder(IEnumerable<IEnumerator> coroutines)
+    private void StartCoroutinesInOrder(IEnumerable<IEnumerator> coroutines)
     {
         StartCoroutine(RunCoroutinesInOrder(coroutines));
     }
@@ -71,21 +63,21 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
         {
             yield return new WaitUntil(() => piece.Arrived);
 
-            Matcher.MatchContainers(matchInfo);
+            matcher.MatchContainers(matchInfo);
         }
     }
 
-    private IEnumerator UpdateAfterMatch(IEnumerable<IPieceContainer> containers)
+    private IEnumerator UpdateInNextFrame(IEnumerable<IPieceContainer> containers)
     {
-        UpdateContainers(containers);
         yield return null;
+        UpdateContainers(containers);
     }
 
     private IMatchInfo GetMatchInfo(IPieceContainer container)
     {
-        List<IPieceContainer> verticalContainers = MatchGetter.GetVerticalMatchs(container);
+        List<IPieceContainer> verticalContainers = matchGetter.GetVerticalMatchs(container);
 
-        List<IPieceContainer> horizontalContainers = MatchGetter.GetHorizontalMatchs(container);
+        List<IPieceContainer> horizontalContainers = matchGetter.GetHorizontalMatchs(container);
 
         return MatchInfoFactory.Create(container,verticalContainers,horizontalContainers);
     }
@@ -100,26 +92,26 @@ public class MatchChecker : MonoBehaviour, IMatchChecker
 
     public void CheckSquareMatch(IPieceContainer container)
     {
-        List<IPieceContainer> containersToMatch = MatchGetter.GetSquareMatch(container, 2);
+        List<IPieceContainer> containersToMatch = matchGetter.GetSquareMatch(container, 2);
         CreateMatchInfo(container, containersToMatch);
     }
 
     public void CheckHorizontalMatch(IPieceContainer container)
     {
-        List<IPieceContainer> containersToMatch = MatchGetter.GetHorizontalMatchs(container,true);
+        List<IPieceContainer> containersToMatch = matchGetter.GetHorizontalMatchs(container,true);
         CreateMatchInfo(container, containersToMatch);
     }
 
     public void CheckVerticalMatch(IPieceContainer container)
     {
-        List<IPieceContainer> containersToMatch = MatchGetter.GetVerticalMatchs(container, true);
+        List<IPieceContainer> containersToMatch = matchGetter.GetVerticalMatchs(container, true);
         CreateMatchInfo(container, containersToMatch);
     }
 
     private void CreateMatchInfo(IPieceContainer container, List<IPieceContainer> containersToMatch)
     {
         IMatchInfo matchInfo = MatchInfoFactory.Create(container, containersToMatch);
-        
-        StartCoroutines(matchInfo);
+        matchInfo.RemoveContainer(container);
+        StartMatchCoroutines(matchInfo);
     }
 }

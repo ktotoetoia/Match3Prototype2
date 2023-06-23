@@ -5,10 +5,12 @@ using System.Collections.Generic;
 public class Piece : MonoBehaviour, IPiece
 {
     [field: SerializeField] public PieceColor Color { get; protected set; }
-    [field: SerializeField] public PieceType Type { get; protected set; }
 
     [SerializeField] protected float speed = 0.1f;
     [SerializeField] protected float stopDistance = 0.01f;
+
+    public virtual PieceType Type { get; protected set; }
+
     public bool Arrived { get { return positions.Count == 0; } }
 
     protected float acceleration = 1;
@@ -49,7 +51,7 @@ public class Piece : MonoBehaviour, IPiece
         transform.position = position;
     }
 
-    public virtual void OnMatch(IMatchInfo matchInfo)
+    public virtual void OnMatch(IMatchInfo matchInfo,IPieceContainer container)
     {
         StartCoroutine(DestroyAfterMove());
     }
