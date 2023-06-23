@@ -11,5 +11,7 @@ public interface IPieceContainer : IGraphUpdatable
     public IPiece ChangePiece(IPiece piece);
     public IPiece Disconnect();
     public bool TryMovePieceTo(IPieceContainer container);
-    public void OnMatch();
+    public void OnMatch(IMatchInfo matchInfo);
+    public void TransformToPiece(IMatchInfo matchInfo, IPiece piece);
+    void Connect(IPiece piece);
 }

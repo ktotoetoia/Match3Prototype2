@@ -28,7 +28,7 @@ public class Gameboard : MonoBehaviour
                 Debug.LogWarning("Component is not implements IGraphUpdatable");
                 continue;
             }
-
+            
             graph.AddGraphUpdatable(graphUpdatable);
         }
     }

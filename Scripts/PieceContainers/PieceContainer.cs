@@ -7,7 +7,6 @@ public class PieceContainer : IPieceContainer
     public Vector2 Position { get { return ContainerInfo.WorldPosition; } }
     public ContainerInfo ContainerInfo { get; private set; }
     public IIncidentContainersInfo IncidentContainerInfo { get; set; }
-
     public PieceContainer(ContainerInfo containerInfo)
     {
         ContainerInfo = containerInfo;
@@ -24,7 +23,7 @@ public class PieceContainer : IPieceContainer
         return false;
     }
 
-    private void Connect(IPiece piece)
+    public void Connect(IPiece piece)
     {
         SetPiece(piece);
         Update();
@@ -47,7 +46,7 @@ public class PieceContainer : IPieceContainer
     {
         if (container.IsEmpty)
         {
-            container.TryConnect(Disconnect());
+            container.Connect(Disconnect());
             Update();
             return true;
         }
@@ -57,16 +56,16 @@ public class PieceContainer : IPieceContainer
 
     public IPiece ChangePiece(IPiece piece)
     {
-        IPiece disconnected = Disconnect();
+        IPiece disconnected = Piece;
 
         Connect(piece);
 
         return disconnected;
     }
 
-    public void OnMatch()
+    public void OnMatch(IMatchInfo matchInfo)
     {
-        Piece?.OnMatch();
+        Piece?.OnMatch(matchInfo);
         Disconnect();
     }
 
@@ -78,5 +77,11 @@ public class PieceContainer : IPieceContainer
         }
 
         IncidentContainerInfo.Update();
+    }
+
+    public void TransformToPiece(IMatchInfo matchInfo, IPiece piece)
+    {
+        Piece?.OnMatch(matchInfo);
+        Connect(piece);
     }
 }

@@ -4,20 +4,24 @@ using System.Collections.Generic;
 
 public class Piece : MonoBehaviour, IPiece
 {
-    [field: SerializeField] public PieceColor Color { get; private set; }
-    [SerializeField] private float speed = 0.1f;
-    [SerializeField] private float stopDistance = 0.01f;
+    [field: SerializeField] public PieceColor Color { get; protected set; }
+    [field: SerializeField] public PieceType Type { get; protected set; }
+
+    [SerializeField] protected float speed = 0.1f;
+    [SerializeField] protected float stopDistance = 0.01f;
     public bool Arrived { get { return positions.Count == 0; } }
 
-    private float acceleration = 1;
-    private Queue<Vector2> positions = new Queue<Vector2>();
+    protected float acceleration = 1;
+    protected Queue<Vector2> positions = new Queue<Vector2>();
+
+    protected bool isReadyToDestroy;
 
     private void Update()
     {
         MoveToNextPosition();
     }
 
-    private void MoveToNextPosition()
+    protected void MoveToNextPosition()
     {
         if (positions.Count == 0)
             return;
@@ -34,7 +38,10 @@ public class Piece : MonoBehaviour, IPiece
 
     public void AddPosition(Vector2 position)
     {
-        positions.Enqueue(position);
+        if (!isReadyToDestroy)
+        {
+            positions.Enqueue(position);
+        }
     }
 
     public void SetPosition(Vector2 position)
@@ -42,13 +49,14 @@ public class Piece : MonoBehaviour, IPiece
         transform.position = position;
     }
 
-    public void OnMatch()
+    public virtual void OnMatch(IMatchInfo matchInfo)
     {
         StartCoroutine(DestroyAfterMove());
     }
 
-    private IEnumerator DestroyAfterMove()
+    protected IEnumerator DestroyAfterMove()
     {
+        isReadyToDestroy = true;
         yield return new WaitUntil(() => positions.Count == 0);
 
         Destroy(gameObject);

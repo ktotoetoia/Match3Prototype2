@@ -38,8 +38,18 @@ public class NullContainer : IPieceContainer
         return null;
     }
 
-    public void OnMatch()
+    public void OnMatch(IMatchInfo matchInfo)
     {
 
+    }
+
+    public void Connect(IPiece piece)
+    {
+
+    }
+
+    public void TransformToPiece(IMatchInfo matchInfo, IPiece piece)
+    {
+    
     }
 }
