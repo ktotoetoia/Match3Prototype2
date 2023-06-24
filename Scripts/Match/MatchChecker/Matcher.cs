@@ -5,7 +5,6 @@ public class Matcher : IMatcher
 {
     private IMatchTransformator matchTransformator;
 
-    [Inject]
     public Matcher(IMatchTransformator matchTransformator)
     {
         this.matchTransformator = matchTransformator;

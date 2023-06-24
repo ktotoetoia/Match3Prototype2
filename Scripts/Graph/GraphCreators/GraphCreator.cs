@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Zenject;
 
 public class GraphCreator : IGraphCreator
 {
@@ -10,7 +9,6 @@ public class GraphCreator : IGraphCreator
     private IContainerFactory nullContainerFactory;
     private IColumnFactory columnFactory;
 
-    [Inject]
     public GraphCreator(IContainerFactory containerFactory,IColumnFactory columnFactory,IGraphInfo graphInfo)
     {
         this.graphInfo = graphInfo;

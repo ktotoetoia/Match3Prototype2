@@ -70,9 +70,4 @@ public class MatchInfo : IMatchInfo
     {
         matchedContainers.Remove(container);
     }
-
-    public IPieceContainer GetContainer(IPiece piece)
-    {
-        return matchedContainers.Find(x => x.Piece == piece);
-    }
 }

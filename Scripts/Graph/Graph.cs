@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Zenject;
+using UnityEngine;
 
-public class Graph : IGraph
+public class Graph : MonoBehaviour, IGraph
 {
     [Inject] private IMatchChecker matchChecker;
-    
+    [Inject] private IGraphCreator graphCreator;
+
     private IPieceContainer[,] containers;
     private List<IColumn> columns = new List<IColumn>();
-
-    private List<IGraphUpdatable> graphUpdatables = new List<IGraphUpdatable>();
 
     public IEnumerable<IPieceContainer> Containers
     {
@@ -25,29 +25,16 @@ public class Graph : IGraph
             foreach (IColumn column in columns) yield return column;
         }
     }
-
-    public Graph(IGraphCreator graphCreator)
+    
+    private void Awake()
     {
         containers = graphCreator.CreateContainers();
         columns = graphCreator.CreateColumns(containers);
     }
 
-    public void Update()
-    {
-        foreach(IGraphUpdatable updatable in graphUpdatables)
-        {
-            updatable.Update();
-        }
-    }
-
     public void AddToColumn(IPiece piece,IColumn column)
     {
         column.AddToTop(piece);
-    }
-
-    public void AddGraphUpdatable(IGraphUpdatable updatable)
-    {
-        graphUpdatables.Add(updatable);
     }
 
     public void Swap(IPieceContainer from, IPieceContainer to)

@@ -9,14 +9,12 @@ public class Piece : MonoBehaviour, IPiece
     [SerializeField] protected float speed = 0.1f;
     [SerializeField] protected float stopDistance = 0.01f;
 
-    public virtual PieceType Type { get; protected set; }
+    protected Queue<Vector2> positions = new Queue<Vector2>();
+    protected float acceleration = 1;
+    protected bool isReadyToDestroy;
 
     public bool Arrived { get { return positions.Count == 0; } }
-
-    protected float acceleration = 1;
-    protected Queue<Vector2> positions = new Queue<Vector2>();
-
-    protected bool isReadyToDestroy;
+    public virtual PieceType Type { get; protected set; }
 
     private void Update()
     {
@@ -35,7 +33,7 @@ public class Piece : MonoBehaviour, IPiece
         if (Vector2.Distance(transform.position, position) < stopDistance) 
             positions.Dequeue();
 
-        acceleration = positions.Count == 0 ? speed : acceleration + speed;
+        acceleration = positions.Count == 0 ? speed : (acceleration + speed);
     }
 
     public void AddPosition(Vector2 position)

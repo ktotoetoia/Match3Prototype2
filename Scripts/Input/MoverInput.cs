@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SelectorInput : MonoBehaviour
+public class MoverInput : MonoBehaviour
 {
     [Inject] private IPieceContainerMover containerMover;
 

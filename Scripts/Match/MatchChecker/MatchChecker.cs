@@ -5,10 +5,10 @@ using Zenject;
 
 public class MatchChecker : MonoBehaviour, IMatchChecker
 {
-    public IMatchInfoFactory MatchInfoFactory { get; private set; }
-
     [Inject] private IMatchGetter matchGetter;
     [Inject] private IMatcher matcher;
+    
+    private IMatchInfoFactory MatchInfoFactory;
 
     private void Awake()
     {

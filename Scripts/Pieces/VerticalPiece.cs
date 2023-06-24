@@ -2,7 +2,6 @@
 {
     public override PieceType Type => PieceType.Vertical;
 
-
     public override void OnMatch(IMatchInfo matchInfo,IPieceContainer container)
     {
         matchInfo.MatchChecker.CheckVerticalMatch(container);

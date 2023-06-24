@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Zenject;
 
-public class GraphPieceAdder : MonoBehaviour, IGraphUpdatable
+public class GraphPieceAdder : MonoBehaviour
 {
     [SerializeField] private float rowPieceAddingDelay = 0.4f;
     [SerializeField] private List<GameObject> pieces;
@@ -11,7 +11,7 @@ public class GraphPieceAdder : MonoBehaviour, IGraphUpdatable
 
     private float lastSpawnTime;
 
-    void IGraphUpdatable.Update()
+    void Update()
     {
         if(lastSpawnTime + rowPieceAddingDelay <= Time.time)
         {

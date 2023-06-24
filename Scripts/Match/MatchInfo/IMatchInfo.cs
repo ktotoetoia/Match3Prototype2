@@ -10,5 +10,4 @@ public interface IMatchInfo
     public IEnumerable<IPieceContainer> MatchedContainers { get; }
 
     public void RemoveContainer(IPieceContainer container);
-    public IPieceContainer GetContainer(IPiece piece);
 }

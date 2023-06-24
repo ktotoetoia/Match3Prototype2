@@ -1,7 +1,5 @@
 using Zenject;
 
-
-
 public class GraphInstaller : MonoInstaller
 {
     [Inject] private LevelSettings levelSettings;
@@ -13,6 +11,6 @@ public class GraphInstaller : MonoInstaller
         Container.Bind<IContainerFactory>().To<PieceContainerFactory>().AsTransient();
         Container.Bind<IColumnFactory>().To<ColumnFactory>().AsTransient().WithConcreteId(null);
         Container.Bind<IGraphCreator>().To<GraphCreator>().AsTransient();
-        Container.Bind<IGraph>().To<Graph>().AsSingle();
+        Container.Bind<IGraph>().To<Graph>().FromComponentInHierarchy().AsSingle();
     }
 }
